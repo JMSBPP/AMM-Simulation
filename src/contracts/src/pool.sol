@@ -3,15 +3,15 @@ pragma solidity ^0.8.0;
 import {IERC20} from "../lib/forge-std/src/interfaces/IERC20.sol";
 
 contract Pool {
-    uint reserveA;
-    uint reserveB;
-    uint rateChange;
-    uint maxReservesX;
-    uint maxReservesY;
-    uint priceX;
-    uint priceY;
-    uint liquidity;
-    address LPToken;
+    uint public reserveA;
+    uint public reserveB;
+    uint public rateChange;
+    uint public maxReservesX;
+    uint public maxReservesY;
+    uint public priceX;
+    uint public priceY;
+    uint public liquidity;
+    address public LPToken;
 
     bool initialized = false;
 
