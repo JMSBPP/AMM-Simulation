@@ -58,3 +58,9 @@ class Simulation(LiquidityModel):
         
         
         plt.savefig('rateChangeEvolution.png', format='png')
+
+
+if __name__ == "__main__":
+    model = Simulation(100, 10, 10)
+    model.simulateAddLiquidity(100)
+    model.rateChangeEvolution()

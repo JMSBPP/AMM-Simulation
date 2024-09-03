@@ -12,6 +12,5 @@ contract TestPool is Test {
 
     function testInitialState() external {
         pool.getReserves();
-        vm.console.log(pool.priceX());
     }
 }
