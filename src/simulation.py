@@ -10,6 +10,7 @@ class Simulation(LiquidityModel):
         self.data = pd.DataFrame()
 
     def simulateAddLiquidity(self, steps):
+        
         for _ in range(steps):
             amount = random.uniform(0.01, 0.99)
             self.addLiquidity(amount)
@@ -62,5 +63,6 @@ class Simulation(LiquidityModel):
 
 if __name__ == "__main__":
     model = Simulation(100, 10, 10)
-    model.simulateAddLiquidity(100)
-    model.rateChangeEvolution()
+    x = model.simulateAddLiquidity(100)
+    print(x)
+    # model.rateChangeEvolution()

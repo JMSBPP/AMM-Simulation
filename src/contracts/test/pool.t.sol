@@ -7,10 +7,10 @@ contract TestPool is Test {
     Pool public pool;
     function setUp() public {
         pool = new Pool();
-        pool.initialize(200, 100, 20);
     }
 
-    function testInitialState() external {
-        pool.getReserves();
+    function testInitialize() public returns (uint) {
+        pool.initialize(400, 10, 20);
+        assertEq(pool.reserveOffset(), 0);
     }
 }
