@@ -5,8 +5,8 @@ import {Pool} from "../src/pool.sol";
 
 contract TestPool is Test {
     Pool public pool;
-    function setUp() public {
-        pool = new Pool();
+    function setUp(address tokenX, address tokenY) public {
+        pool = new Pool(tokenX, tokenY);
     }
 
     function testInitialize() public returns (uint) {
