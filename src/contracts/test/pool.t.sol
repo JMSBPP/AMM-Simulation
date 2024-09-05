@@ -5,12 +5,17 @@ import {Pool} from "../src/pool.sol";
 
 contract TestPool is Test {
     Pool public pool;
-    function setUp(address tokenX, address tokenY) public {
-        pool = new Pool(tokenX, tokenY);
+    function setUp() public {
+        pool = new Pool();
     }
 
-    function testInitialize() public returns (uint) {
+    function testInitialize() public {
         pool.initialize(400, 10, 20);
         assertEq(pool.reserveOffset(), 0);
+    }
+
+    function testAddLiquidity() public {
+        pool.initialize(400, 10, 20);
+        pool.addLiquidity(10, 20);
     }
 }

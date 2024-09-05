@@ -48,9 +48,7 @@ contract Pool {
         _;
     }
 
-    constructor(address _tokenX, address _tokenY) {
-        tokenX = _tokenX;
-        tokenY = _tokenY;
+    constructor() {
         _state = state.NOT_INITIALIZED;
     }
 
@@ -70,8 +68,8 @@ contract Pool {
         maxReservesX = _maxReserveX;
         reserveA = initialReserveX;
         reserveB = initialReserveY;
-        IERC20(tokenX).transfer(address(this), initialReserveX);
-        IERC20(tokenY).transfer(address(this), initialReserveY);
+        // IERC20(tokenX).transfer(address(this), initialReserveX);
+        // IERC20(tokenY).transfer(address(this), initialReserveY);
         _update();
         _state = state.INITIALIZED;
         emit PoolInitialized(reserveA, reserveB, maxReservesX);
@@ -118,8 +116,12 @@ contract Pool {
         uint _reserveA,
         uint amountA
     ) private pure returns (uint) {
-        uint acceptableB = ((_reserveB * amountA) * FACTOR_SCALE) / _reserveA;
-        return acceptableB;
+        uint numerator = _reserveB * amountA;
+        uint denominator = _reserveA;
+        uint optimalB = numerator > denominator
+            ? ((numerator * FACTOR_SCALE) / denominator) / FACTOR_SCALE
+            : ((numerator) * FACTOR_SCALE) / denominator;
+        return optimalB;
     }
 
     function addLiquidity(
@@ -130,18 +132,20 @@ contract Pool {
         _initialized
         upperBoundTokenXLiquidity(amountA)
         upperBoundTokenYLiquidity(amountB)
+        returns (uint)
     {
         uint optimalB = acceptableTokenYamount(reserveB, reserveA, amountA);
-        if (optimalB >= amountB) {
-            IERC20(tokenY).approve(address(this), optimalB - amountB);
-            IERC20(tokenY).transferFrom(
-                address(this),
-                msg.sender,
-                optimalB - amountB
-            );
-        }
-        if (optimalB < amountB) {
-            revert InvalidInputAmount();
-        }
+        return (optimalB);
+        // if (optimalB >= amountB) {
+        //     IERC20(tokenY).approve(address(this), optimalB - amountB);
+        //     IERC20(tokenY).transferFrom(
+        //         address(this),
+        //         msg.sender,
+        //         optimalB - amountB
+        //     );
+        // }
+        // if (optimalB < amountB) {
+        //     revert InvalidInputAmount();
+        // }
     }
 }
