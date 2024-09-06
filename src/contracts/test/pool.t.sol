@@ -16,6 +16,6 @@ contract TestPool is Test {
 
     function testAddLiquidity() public {
         pool.initialize(400, 10, 20);
-        pool.addLiquidity(10, 20);
+        pool.addLiquidity(5, 20);
     }
 }

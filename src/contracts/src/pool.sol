@@ -12,8 +12,8 @@ contract Pool {
     uint public priceY;
     uint public liquidity;
     address public LPToken;
-    address tokenX;
-    address tokenY;
+    address public tokenX;
+    address public tokenY;
 
     uint private constant FACTOR_SCALE = 1e8;
 
@@ -75,6 +75,11 @@ contract Pool {
         emit PoolInitialized(reserveA, reserveB, maxReservesX);
     }
 
+    function setTokenPair(address _tokenX, address _tokenY) public {
+        tokenX = _tokenX;
+        tokenY = _tokenY;
+    }
+
     function _update() internal {
         if (_state == state.INITIALIZED) {
             maxReservesX = reserveA + rateChange * reserveB;
@@ -132,20 +137,23 @@ contract Pool {
         _initialized
         upperBoundTokenXLiquidity(amountA)
         upperBoundTokenYLiquidity(amountB)
-        returns (uint)
+        returns (int)
     {
         uint optimalB = acceptableTokenYamount(reserveB, reserveA, amountA);
-        return (optimalB);
+        int actualAmountInB = int(optimalB - amountB);
         // if (optimalB >= amountB) {
-        //     IERC20(tokenY).approve(address(this), optimalB - amountB);
-        //     IERC20(tokenY).transferFrom(
-        //         address(this),
-        //         msg.sender,
-        //         optimalB - amountB
-        //     );
+        //     actualAmountInB = optimalB - amountB;
+        //     // IERC20(tokenY).approve(address(this), optimalB - amountB);
+        //     // IERC20(tokenY).transferFrom(
+        //     //     address(this),
+        //     //     msg.sender,
+        //     //     optimalB - amountB
+        //     // );
         // }
-        // if (optimalB < amountB) {
-        //     revert InvalidInputAmount();
-        // }
+        if (optimalB < amountB) {
+            revert InvalidInputAmount();
+        }
+
+        return actualAmountInB;
     }
 }
